@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insertar Botellas</title>
+
+    <!-- Enlaza Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <!-- DataTables CSS -->
+    <link href="{{ url_for('static', filename='css/datatables.min.css') }}" rel="stylesheet">
+    <!-- DataTables JS -->
+    <script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
+
+    <!-- Enlaza tu archivo CSS personalizado -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <!-- Botón para volver al inicio -->
+    <div class="container mt-3">
+        <a href="http://localhost:5000/" class="btn btn-primary">Volver al Inicio</a>
+    </div>
+    <div class="container">
+        <h1>Agregar una nueva botella</h1>
+        <!-- Mostrar el mensaje si se ha agregado una botella o hubo un error -->
+        {% if mensaje %}
+        <div class="alert alert-success" role="alert">
+            {{ mensaje }}
+        </div>
+        {% if remito_id %}
+            <a href="{{ url_for('cargar_botella.descargar_pdf', remito_id=remito_id) }}" class="btn btn-primary">Descargar PDF</a>
+        {% endif %}
+        {% endif %}
+        <br>
+        <form id="formulario_cargar_botella" action="/cargar_botella" method="POST">
+                <!-- Fecha -->
+            <br>
+                <div class="mb-3">
+                    <label for="fecha" class="form-label">Fecha de línea y lote:</label>
+                    <input type="date" class="form-control" id="fecha" name="fecha" required>
+                </div>
+
+                <!-- Línea (tipo de vino) -->
+                <div class="mb-3">
+                    <label for="linea" class="form-label">Línea de vino:</label>
+                    <select class="form-select" id="linea" name="linea" onchange="checkOther(this)" required>
+                        <option value="" selected disabled>Seleccionar</option>
+                        <option value="Malbec">Malbec</option>
+                        <option value="Cabernet">Cabernet</option>
+                        <option value="Rosado">Rosado</option>
+                        <option value="Syrah">Syrah</option>
+                        <option value="Chardonnay">Chardonnay</option>
+                        <option value="Pinot Noir">Pinot Noir</option>
+                        <option value="Torrontés">Torrontés</option>
+                        <option value="Tempranillo">Tempranillo</option>
+                        <option value="Bonarda">Bonarda</option>
+                        <option value="otro">Otro (escribe abajo)</option>
+                    </select>
+                </div>
+
+                <!-- Campo adicional para cuando se selecciona "Otro" -->
+                <div class="mb-3" id="div-linea-otro" style="display:none;">
+                    <label for="linea_otro" class="form-label">Escriba la línea de vino:</label>
+                    <input type="text" class="form-control" id="linea_otro" name="linea_otro" placeholder="Escriba su opción">
+                </div>
+
+                <!-- Cosecha (año) -->
+                <div class="mb-3">
+                    <label for="cosecha" class="form-label">Cosecha (año):</label>
+                    <input type="number" class="form-control" id="cosecha" name="cosecha" required min="1000" max="9999" placeholder="AAAA">
+                </div>
+
+                <!-- Lote (texto) -->
+                <div class="mb-3">
+                    <label for="lote" class="form-label">Lote:</label>
+                    <input type="text" class="form-control" id="lote" name="lote" required>
+                </div>
+
+                <!-- Litros (nuevo campo) -->
+                <div class="mb-3">
+                    <label for="litros" class="form-label">Litros:</label>
+                    <input type="number" class="form-control" id="litros" name="litros" required step="0.01">
+                </div>
+
+                <!-- Botón de envío -->
+                <button type="submit" class="btn btn-primary">Agregar Botella</button>
+            </form>
+    </div>
+
+    <!-- Script de Bootstrap JS y lógica de selección -->
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- Script para agregar línea si no está en la lista y validar -->
+<script>
+    $(document).ready(function() {
+        $('#tablaTurnosGlobales').DataTable({
+            "pageLength": 5,  // Mostrar solo 5 filas por página
+            "lengthChange": false,  // Desactivar el cambio de cantidad de filas mostradas
+            "searching": true,  // Habilitar búsqueda
+            "paging": true,  // Habilitar paginación
+            "ordering": true,  // Habilitar ordenación por columnas
+            "info": false,  // Desactivar la información de cantidad de registros
+            "order": [[0, 'asc'], [1, 'asc']],  // Ordenar por fecha y hora
+            "language": {
+                "search": "Buscar:",  // Cambia el texto del input de búsqueda
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                },
+                "emptyTable": "No hay datos disponibles en la tabla",
+                "zeroRecords": "No se encontraron coincidencias"
+            }
+        });
+    });
+</script>
+</body>
+</html>

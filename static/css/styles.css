@@ -1,0 +1,9 @@
+.table-container {
+    margin-top: 20px; /* Reduce el margen superior para acercar la tabla */
+    margin-bottom: 20px; /* Controla el espacio inferior */
+}
+
+.table {
+    margin: 0 auto; /* Centrar la tabla */
+    width: 80%; /* Ajusta el ancho de la tabla si es necesario */
+}
